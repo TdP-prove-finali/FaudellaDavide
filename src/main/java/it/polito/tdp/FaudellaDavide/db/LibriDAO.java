@@ -166,29 +166,4 @@ public class LibriDAO {
 		}
 		return result;
 	}
-
-//	public List<Adiacenza> getAdiacenze(Genre genere, Map<Integer, Track> idMap) {
-//		final String sql = "SELECT t1.TrackId as t1, t2.TrackId as t2 " + "FROM Track t1, track t2 "
-//				+ "WHERE t1.GenreId = t2.GenreId AND t1.GenreId= ? " + "AND t1.MediaTypeId = t2.MediaTypeId "
-//				+ "AND t1.TrackId > t2.TrackId";
-//		List<Adiacenza> result = new ArrayList<Adiacenza>();
-//		int genereS = genere.getGenreId();
-//		try {
-//			Connection conn = DBConnect.getConnection();
-//			PreparedStatement st = conn.prepareStatement(sql);
-//			st.setInt(1, genereS);
-//			ResultSet res = st.executeQuery();
-//
-//			while (res.next()) {
-//				result.add(new Adiacenza(idMap.get(res.getInt("t1")), idMap.get(res.getInt("t2"))));
-//
-//			}
-//			conn.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//			throw new RuntimeException("SQL Error");
-//		}
-//		return result;
-//	}
-
 }

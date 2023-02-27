@@ -93,6 +93,17 @@ public class Model {
 		return parziale;
 	}
 
+	public boolean isStronger(Libro li) {
+		for (Libro l : libriParametri) {
+			if (l.getTitolo().equals(li.getTitolo())) {
+				if (l.getRank() < li.getRank()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public List<Libro> doRicorsione(float budget, float rating, int numero, int annoI, int annoF, String copertina,
 			String genere) {
 		libriParametri = dao.getBooksParametri(rating, numero, annoI, annoF, copertina, genere);
@@ -125,6 +136,16 @@ public class Model {
 			totale += l.getPrezzo();
 		}
 		if (totale <= budget && !parziale.contains(li)) {
+			for (Libro l : libriParametri) {
+				if (l.getTitolo().equals(li.getTitolo())) {
+					if (isStronger(li)) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+
+			}
 			return true;
 		}
 		return false;
@@ -147,58 +168,4 @@ public class Model {
 		}
 		return bestSeller;
 	}
-
-//	SimpleWeightedGraph<Track, DefaultWeightedEdge> grafo;
-//	Map<Integer, Track> idMap;
-//
-//	public void popolaIdMap(Genre g) {
-//		idMap = new HashMap<>();
-//		for (Track t : dao.getAllTracks(g)) {
-//			idMap.put(t.getTrackId(), t);
-//		}
-//		return;
-//	}
-//
-//	public void creaGrafo(Genre g) {
-//		grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-//		Graphs.addAllVertices(grafo, dao.getAllTracks(g));
-//		popolaIdMap(g);
-//		for (Adiacenza a : dao.getAdiacenze(g, idMap)) {
-//			Graphs.addEdge(grafo, a.getT1(), a.getT2(), a.getPeso());
-//		}
-//		System.out.println(grafo.vertexSet().size());
-//		System.out.println(grafo.edgeSet().size());
-//	}
-//
-//	public List<Adiacenza> getDeltaMax() {
-//		List<Adiacenza> result = new ArrayList<Adiacenza>();
-//		double min = -1;
-//		for (DefaultWeightedEdge e : grafo.edgeSet()) {
-//			if (grafo.getEdgeWeight(e) > min) {
-//				min = grafo.getEdgeWeight(e);
-//				result.clear();
-//				result.add(new Adiacenza(grafo.getEdgeSource(e), grafo.getEdgeTarget(e)));
-//			} else if (grafo.getEdgeWeight(e) == min) {
-//				result.add(new Adiacenza(grafo.getEdgeSource(e), grafo.getEdgeTarget(e)));
-//			}
-//		}
-//		return result;
-//	}
-//
-//	public List<Track> getTracks() {
-//		List<Track> l = new ArrayList<Track>(grafo.vertexSet());
-////		for (Track t : grafo.vertexSet()) {
-////			l.add(t);
-////		}
-//		return l;
-//	}
-//
-//	public List<Genre> getGeneri() {
-//		return dao.getAllGenres();
-//	}
-//
-//	public Map<Integer, Track> getIdMap() {
-//		return idMap;
-//	}
-//
 }
