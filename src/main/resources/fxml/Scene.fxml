@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -26,7 +28,6 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="txtLibri" editable="false" layoutX="27.0" layoutY="190.0" prefHeight="192.0" prefWidth="547.0" />
                         <Label layoutX="415.0" layoutY="24.0" text="Ricerca Libri" textFill="#48468f">
                            <font>
                               <Font name="System Bold" size="21.0" />
@@ -47,8 +48,17 @@
                               <Font name="System Bold" size="11.0" />
                            </font>
                         </Button>
+                        <TableView fx:id="table1" layoutX="27.0" layoutY="186.0" prefHeight="200.0" prefWidth="580.0">
+                           <columns>
+                              <TableColumn fx:id="clTitolo1" prefWidth="163.19997787475586" text="Titolo" />
+                              <TableColumn fx:id="clAutore1" prefWidth="110.40003967285156" text="Autore" />
+                              <TableColumn fx:id="clAnno1" prefWidth="73.5999755859375" text="Anno" />
+                              <TableColumn fx:id="clPrezzo1" prefWidth="71.20001220703125" text="Prezzo" />
+                              <TableColumn fx:id="clCopertina1" minWidth="4.79998779296875" prefWidth="77.60003662109375" text="Copertina" />
+                              <TableColumn fx:id="clGenere1" prefWidth="80.79998779296875" text="Genere" />
+                           </columns>
+                        </TableView>
                         <ComboBox fx:id="cmbTitoloLeggi" layoutX="672.0" layoutY="432.0" prefWidth="150.0" />
-                        <TextArea fx:id="txtListaLeggere" editable="false" layoutX="27.0" layoutY="432.0" prefHeight="168.0" prefWidth="547.0" />
                         <Button fx:id="btnRicerca" layoutX="654.0" layoutY="105.0" mnemonicParsing="false" onAction="#doRicerca" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #AEEEEE; -fx-border-color: #48468f;" text="RICERCA" textFill="#48468f">
                            <font>
                               <Font name="System Bold" size="11.0" />
@@ -93,6 +103,16 @@
                            </font>
                         </Button>
                         <TextArea fx:id="txtErrori" editable="false" layoutX="630.0" layoutY="190.0" prefHeight="192.0" prefWidth="293.0" style="-fx-border-color: red; -fx-text-fill: red;" visible="false" />
+                        <TableView fx:id="table2" layoutX="27.0" layoutY="423.0" prefHeight="186.0" prefWidth="580.0">
+                           <columns>
+                              <TableColumn fx:id="clTitolo2" prefWidth="163.19997787475586" text="Titolo" />
+                              <TableColumn fx:id="clAutore2" prefWidth="110.40003967285156" text="Autore" />
+                              <TableColumn fx:id="clAnno2" prefWidth="73.5999755859375" text="Anno" />
+                              <TableColumn fx:id="clPrezzo2" prefWidth="71.20001220703125" text="Prezzo" />
+                              <TableColumn fx:id="clCopertina2" minWidth="4.79998779296875" prefWidth="77.60003662109375" text="Copertina" />
+                              <TableColumn fx:id="clGenere2" prefWidth="80.79998779296875" text="Genere" />
+                           </columns>
+                        </TableView>
                      </children>
                   </AnchorPane>
             </content>
@@ -137,13 +157,12 @@
                            <font>
                               <Font name="System Bold" size="11.0" />
                            </font></Button>
-                        <TextArea fx:id="txtGenerato" editable="false" layoutX="67.0" layoutY="339.0" prefHeight="232.0" prefWidth="547.0" />
-                        <Text fx:id="txtNumLib" fill="#48468f" layoutX="666.0" layoutY="358.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Numero Libri: " wrappingWidth="156.07681274414062">
+                        <Text fx:id="txtNumLib" fill="#48468f" layoutX="666.0" layoutY="358.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Numero Libri: " visible="false" wrappingWidth="156.07681274414062">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Text>
-                        <Text fx:id="txtCostoTot" fill="#48468f" layoutX="665.0" layoutY="402.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Costo totale: ">
+                        <Text fx:id="txtCostoTot" fill="#48468f" layoutX="665.0" layoutY="402.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Costo totale: " visible="false">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -167,7 +186,7 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <Text fx:id="txtBestSeller" fill="#48468f" layoutX="663.0" layoutY="446.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Best Seller: ">
+                        <Text fx:id="txtBestSeller" fill="#48468f" layoutX="663.0" layoutY="446.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Best Seller: " visible="false">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -195,6 +214,16 @@
                            </font>
                         </Button>
                         <TextArea fx:id="txtErroriGen" editable="false" layoutX="671.0" layoutY="154.0" prefHeight="99.0" prefWidth="210.0" style="-fx-text-fill: red; -fx-border-color: red;" visible="false" />
+                        <TableView fx:id="tableGenera" layoutX="40.0" layoutY="339.0" prefHeight="200.0" prefWidth="610.0">
+                          <columns>
+                            <TableColumn fx:id="clTitoloG" prefWidth="192.00002670288086" text="Titolo" />
+                              <TableColumn fx:id="clAutoreG" prefWidth="134.3999786376953" text="Autore" />
+                            <TableColumn fx:id="clAnnoG" prefWidth="64.800048828125" text="Anno" />
+                              <TableColumn fx:id="clPrezzoG" prefWidth="63.20001220703125" text="Prezzo" />
+                              <TableColumn fx:id="clRatingG" prefWidth="56.0" text="Rating" />
+                              <TableColumn fx:id="clRecensioniG" prefWidth="96.79996337890623" text="N°  Recensioni" />
+                          </columns>
+                        </TableView>
                      </children>
                   </AnchorPane>
             </content>

@@ -5,17 +5,21 @@ import java.util.List;
 import it.polito.tdp.FaudellaDavide.model.Libro;
 import it.polito.tdp.FaudellaDavide.model.Model;
 
-import java.awt.Color;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
@@ -46,6 +50,69 @@ public class FXMLController {
 
 	@FXML
 	private Button btnRimuoviListaLeggere;
+
+	@FXML
+	private TableColumn<Libro, Integer> clAnno1;
+
+	@FXML
+	private TableColumn<Libro, Integer> clAnno2;
+
+	@FXML
+	private TableColumn<Libro, Integer> clAnnoG;
+
+	@FXML
+	private TableColumn<Libro, String> clAutore1;
+
+	@FXML
+	private TableColumn<Libro, String> clAutore2;
+
+	@FXML
+	private TableColumn<Libro, String> clAutoreG;
+
+	@FXML
+	private TableColumn<Libro, Float> clPrezzo1;
+
+	@FXML
+	private TableColumn<Libro, Float> clPrezzo2;
+
+	@FXML
+	private TableColumn<Libro, Float> clPrezzoG;
+
+	@FXML
+	private TableColumn<Libro, String> clCopertina1;
+
+	@FXML
+	private TableColumn<Libro, String> clCopertina2;
+
+	@FXML
+	private TableColumn<Libro, Float> clRatingG;
+
+	@FXML
+	private TableColumn<Libro, String> clGenere1;
+
+	@FXML
+	private TableColumn<Libro, String> clGenere2;
+
+	@FXML
+	private TableColumn<Libro, Integer> clRecensioniG;
+
+	@FXML
+	private TableColumn<Libro, String> clTitolo1;
+
+	@FXML
+	private TableColumn<Libro, String> clTitolo2;
+
+	@FXML
+	private TableColumn<Libro, String> clTitoloG;
+
+	@FXML
+	private TableView<Libro> table1;
+
+	@FXML
+	private TableView<Libro> table2;
+
+	@FXML
+	private TableView<Libro> tableGenera;
 
 	@FXML
 	private ComboBox<Integer> cmbAnnoF;
@@ -108,15 +175,6 @@ public class FXMLController {
 	private TextArea txtErroriGen;
 
 	@FXML
-	private TextArea txtGenerato;
-
-	@FXML
-	private TextArea txtLibri;
-
-	@FXML
-	private TextArea txtListaLeggere;
-
-	@FXML
 	private Text txtNumLib;
 
 	@FXML
@@ -153,14 +211,13 @@ public class FXMLController {
 		cmbTitoloLeggiRimuovi.getItems().clear();
 		cmbTitoloLeggiRimuovi.getItems().addAll(model.getDaLeggere());
 		cmbTitoloLeggi.valueProperty().setValue(null);
-		txtListaLeggere.setText(stringaLibro(model.getDaLeggere()));
+		table2.setItems(FXCollections.observableArrayList(model.getDaLeggere()));
 	}
 
 	@FXML
 	void doAggiungiListaGen(ActionEvent event) {
 		txtErroriGen.setVisible(false);
 		txtErroriGen.clear();
-		txtGenerato.setStyle("-fx-text-fill: black");
 		String autore = cmbAutoreGen.getValue();
 		if (autore == null) {
 			txtErroriGen.setVisible(true);
@@ -182,7 +239,7 @@ public class FXMLController {
 			cmbLibroGen.valueProperty().setValue(null);
 			return;
 		}
-		txtGenerato.setText(stringaLibro(model.getParziale()));
+		tableGenera.setItems(FXCollections.observableArrayList(model.getParziale()));
 		cmbLibroGen.valueProperty().setValue(null);
 	}
 
@@ -190,8 +247,7 @@ public class FXMLController {
 	void doGenera(ActionEvent event) {
 		txtErroriGen.setVisible(false);
 		txtErroriGen.clear();
-		txtGenerato.clear();
-		// txtGenerato.setText(stringaLibro(model.getBest()));
+		tableGenera.getItems().clear();
 		float budget = 0;
 		try {
 			budget = Float.parseFloat(txtBudget.getText());
@@ -265,20 +321,25 @@ public class FXMLController {
 			return;
 		}
 
-		txtGenerato.setStyle("-fx-text-fill: black");
-//		int prova = model.doRicorsione(budget, rating, recensioni, annoIGen, annoFGen, copertina, genere).size();
-//		txtGenerato.appendText("" + prova);
 		List<Libro> lista = model.doRicorsione(budget, rating, recensioni, annoIGen, annoFGen, copertina, genere);
-		txtGenerato.appendText(stringaLibro(lista));
-		txtNumLib.setText("Numero Libri: " + lista.size());
-		txtCostoTot.setText("Costo totale: " + model.totale(lista));
-		txtBestSeller.setText("Best Seller: " + model.bestSeller(lista));
+		tableGenera.setItems(FXCollections.observableArrayList(lista));
+		if (model.bestSeller(lista) == null) {
+			txtErroriGen.setVisible(true);
+			txtErroriGen.setText("Non sono stati trovati libri con questi\nparametri");
+		} else {
+			txtNumLib.setText("Numero Libri: " + lista.size());
+			txtCostoTot.setText("Costo totale: " + model.totale(lista));
+			txtBestSeller.setText("Best Seller: \n" + model.bestSeller(lista));
+			txtNumLib.setVisible(true);
+			txtCostoTot.setVisible(true);
+			txtBestSeller.setVisible(true);
+		}
 	}
 
 	@FXML
 	void doResetGenera(ActionEvent event) {
 		model.cancellaBest();
-		txtGenerato.setText("Lista correttamente cancellata\n");
+		tableGenera.getItems().clear();
 		txtBudget.clear();
 		txtNumReceMin.clear();
 		txtRatingMin.clear();
@@ -291,6 +352,10 @@ public class FXMLController {
 		txtNumLib.setText("Numero Libri: ");
 		txtCostoTot.setText("Costo totale: ");
 		txtBestSeller.setText("Best Seller: ");
+		txtNumLib.setVisible(false);
+		txtCostoTot.setVisible(false);
+		txtBestSeller.setVisible(false);
+		txtErroriGen.clear();
 		txtErroriGen.setVisible(false);
 	}
 
@@ -300,9 +365,7 @@ public class FXMLController {
 		txtErrori.setVisible(false);
 		model.cancellaLista();
 		cmbTitoloLeggiRimuovi.getItems().clear();
-		txtListaLeggere.clear();
-		txtListaLeggere.appendText("Lista correttamente resettata");
-		;
+		table2.getItems().clear();
 	}
 
 	@FXML
@@ -310,7 +373,7 @@ public class FXMLController {
 		txtErrori.clear();
 		txtErrori.setVisible(false);
 		cmbTitoloLeggi.getItems().clear();
-		txtLibri.clear();
+		table1.getItems().clear();
 		cmbAutore.valueProperty().setValue(null);
 		cmbAnnoI.valueProperty().setValue(null);
 		cmbAnnoF.valueProperty().setValue(null);
@@ -321,7 +384,7 @@ public class FXMLController {
 		txtErrori.clear();
 		txtErrori.setVisible(false);
 		cmbTitoloLeggi.getItems().clear();
-		txtLibri.clear();
+		table1.getItems().clear();
 		String aut = cmbAutore.getValue();
 		Integer annoI = cmbAnnoI.getValue();
 		Integer annoF = cmbAnnoF.getValue();
@@ -329,34 +392,37 @@ public class FXMLController {
 
 		// controllo input
 
-		if (aut == null || annoI == null || annoF == null) {
-			if (aut == null) {
-				txtErrori.appendText("Seleziona un autore\n");
-			}
-			if (annoI == null) {
-				txtErrori.appendText("Seleziona anno iniziale\n");
-			}
-			if (annoF == null) {
-				txtErrori.appendText("Seleziona anno finale\n");
-			}
+		if (aut == null && annoI == null && annoF == null) {
+			txtErrori.setText("Seleziona l'autore e/o il range di anni desiderato");
 			txtErrori.setVisible(true);
 			return;
 		}
 
-		if (annoF < annoI) {
-			txtErrori.setVisible(true);
-			txtErrori.appendText("Seleziona un range di anni valido\n");
-			return;
+		if (aut != null && annoI == null && annoF == null) {
+			trovati.addAll(model.cercaLibriAutore(aut));
+		} else if (aut == null && annoI != null && annoF != null) {
+			if (annoF < annoI) {
+				txtErrori.setVisible(true);
+				txtErrori.appendText("Seleziona un range di anni valido\n");
+				return;
+			}
+			trovati.addAll(model.cercaLibriAnno(annoI, annoF));
+		} else {
+			if (annoF < annoI) {
+				txtErrori.setVisible(true);
+				txtErrori.appendText("Seleziona un range di anni valido\n");
+				return;
+			}
+			trovati.addAll(model.cercaLibri(aut, annoI, annoF));
+			System.out.print(trovati.size());
 		}
-
-		trovati.addAll(model.cercaLibri(aut, annoI, annoF));
-
 		// se lista vuota dico che non ho trovato niente
 		if (trovati.isEmpty() == true) {
-			txtLibri.appendText("Non sono stati trovati libri di " + aut + " nel periodo: " + annoI + "-" + annoF);
+			txtErrori.setVisible(true);
+			txtErrori.appendText("Non sono stati trovati libri di \n" + aut + " nel periodo: " + annoI + "-" + annoF);
 			return;
 		}
-		txtLibri.appendText(stringaLibro(trovati));
+		table1.setItems(FXCollections.observableArrayList(trovati));
 		cmbTitoloLeggi.getItems().addAll(trovati);
 	}
 
@@ -377,15 +443,7 @@ public class FXMLController {
 		}
 		cmbTitoloLeggiRimuovi.getItems().clear();
 		cmbTitoloLeggiRimuovi.getItems().addAll(model.getDaLeggere());
-		txtListaLeggere.setText(stringaLibro(model.getDaLeggere()));
-	}
-
-	private String stringaLibro(List<Libro> libri) {
-		String stringa = "";
-		for (Libro l : libri) {
-			stringa += l.getTitolo() + ", " + l.getAnno() + "\n";
-		}
-		return stringa;
+		table2.setItems(FXCollections.observableArrayList(model.getDaLeggere()));
 	}
 
 	public void setModel(Model model) {
@@ -414,6 +472,24 @@ public class FXMLController {
 		assert btnRicerca != null : "fx:id=\"btnRicerca\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert btnRimuoviListaLeggere != null
 				: "fx:id=\"btnRimuoviListaLeggere\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clAnno1 != null : "fx:id=\"clAnno1\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clAnno2 != null : "fx:id=\"clAnno2\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clAnnoG != null : "fx:id=\"clAnnoG\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clAutore1 != null : "fx:id=\"clAutore1\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clAutore2 != null : "fx:id=\"clAutore2\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clAutoreG != null : "fx:id=\"clAutoreG\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clPrezzo1 != null : "fx:id=\"clPrezzo1\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clPrezzo2 != null : "fx:id=\"clPrezzo2\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clPrezzoG != null : "fx:id=\"clPrezzoG\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clCopertina1 != null : "fx:id=\"clRating1\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clCopertina2 != null : "fx:id=\"clRating2\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clRatingG != null : "fx:id=\"clRatingG\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clGenere1 != null : "fx:id=\"clRecensioni1\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clGenere2 != null : "fx:id=\"clRecensioni2\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clRecensioniG != null : "fx:id=\"clRecensioniG\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clTitolo1 != null : "fx:id=\"clTitolo1\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clTitolo2 != null : "fx:id=\"clTitolo2\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert clTitoloG != null : "fx:id=\"clTitoloG\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert cmbAnnoF != null : "fx:id=\"cmbAnnoF\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert cmbAnnoFGen != null : "fx:id=\"cmbAnnoFGen\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert cmbAnnoI != null : "fx:id=\"cmbAnnoI\" was not injected: check your FXML file 'Scene.fxml'.";
@@ -429,19 +505,39 @@ public class FXMLController {
 		assert n2 != null : "fx:id=\"n2\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert tab1 != null : "fx:id=\"tab1\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert tab2 != null : "fx:id=\"tab2\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert table1 != null : "fx:id=\"table1\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert table2 != null : "fx:id=\"table2\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert tableGenera != null : "fx:id=\"tableGenera\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert tb != null : "fx:id=\"tb\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert txtBestSeller != null : "fx:id=\"txtBestSeller\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert txtBudget != null : "fx:id=\"txtBudget\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert txtCostoTot != null : "fx:id=\"txtCostoTot\" was not injected: check your FXML file 'Scene.fxml'.";
+		assert txtErrori != null : "fx:id=\"txtErrori\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert txtErroriGen != null : "fx:id=\"txtErroriGen\" was not injected: check your FXML file 'Scene.fxml'.";
-		assert txtGenerato != null : "fx:id=\"txtGenerato\" was not injected: check your FXML file 'Scene.fxml'.";
-		assert txtLibri != null : "fx:id=\"txtLibri\" was not injected: check your FXML file 'Scene.fxml'.";
-		assert txtListaLeggere != null
-				: "fx:id=\"txtListaLeggere\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert txtNumLib != null : "fx:id=\"txtNumLib\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert txtNumReceMin != null : "fx:id=\"txtNumReceMin\" was not injected: check your FXML file 'Scene.fxml'.";
 		assert txtRatingMin != null : "fx:id=\"txtRatingMin\" was not injected: check your FXML file 'Scene.fxml'.";
 
+		clTitoloG.setCellValueFactory(new PropertyValueFactory<Libro, String>("titolo"));
+		clAutoreG.setCellValueFactory(new PropertyValueFactory<Libro, String>("autore"));
+		clAnnoG.setCellValueFactory(new PropertyValueFactory<Libro, Integer>("anno"));
+		clPrezzoG.setCellValueFactory(new PropertyValueFactory<Libro, Float>("prezzo"));
+		clRatingG.setCellValueFactory(new PropertyValueFactory<Libro, Float>("rating"));
+		clRecensioniG.setCellValueFactory(new PropertyValueFactory<Libro, Integer>("numRecensioni"));
+
+		clTitolo1.setCellValueFactory(new PropertyValueFactory<Libro, String>("titolo"));
+		clAutore1.setCellValueFactory(new PropertyValueFactory<Libro, String>("autore"));
+		clAnno1.setCellValueFactory(new PropertyValueFactory<Libro, Integer>("anno"));
+		clPrezzo1.setCellValueFactory(new PropertyValueFactory<Libro, Float>("prezzo"));
+		clCopertina1.setCellValueFactory(new PropertyValueFactory<Libro, String>("tipoCopertina"));
+		clGenere1.setCellValueFactory(new PropertyValueFactory<Libro, String>("genere"));
+
+		clTitolo2.setCellValueFactory(new PropertyValueFactory<Libro, String>("titolo"));
+		clAutore2.setCellValueFactory(new PropertyValueFactory<Libro, String>("autore"));
+		clAnno2.setCellValueFactory(new PropertyValueFactory<Libro, Integer>("anno"));
+		clPrezzo2.setCellValueFactory(new PropertyValueFactory<Libro, Float>("prezzo"));
+		clCopertina2.setCellValueFactory(new PropertyValueFactory<Libro, String>("tipoCopertina"));
+		clGenere2.setCellValueFactory(new PropertyValueFactory<Libro, String>("genere"));
 	}
 
 }

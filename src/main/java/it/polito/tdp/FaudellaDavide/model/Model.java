@@ -9,14 +9,35 @@ public class Model {
 
 	LibriDAO dao = new LibriDAO();
 	List<Libro> daLeggere = new LinkedList<>();
-	List<Libro> best;
+	List<Libro> best = new ArrayList<>();;
 	List<Libro> parziale = new ArrayList<>();
 	List<Libro> libriParametri = new LinkedList<>();
+	List<Libro> tuttiLibri = getAllBooks();
 
 	public List<Libro> cercaLibri(String aut, int annoI, int annoF) {
 		List<Libro> libri = new LinkedList<>();
-		for (Libro l : getAllBooks()) {
+		for (Libro l : tuttiLibri) {
 			if (l.getAutore().equals(aut) && l.getAnno() <= annoF && l.getAnno() >= annoI) {
+				libri.add(l);
+			}
+		}
+		return libri;
+	}
+
+	public List<Libro> cercaLibriAutore(String aut) {
+		List<Libro> libri = new LinkedList<>();
+		for (Libro l : tuttiLibri) {
+			if (l.getAutore().equals(aut)) {
+				libri.add(l);
+			}
+		}
+		return libri;
+	}
+
+	public List<Libro> cercaLibriAnno(int annoI, int annoF) {
+		List<Libro> libri = new LinkedList<>();
+		for (Libro l : tuttiLibri) {
+			if (l.getAnno() <= annoF && l.getAnno() >= annoI) {
 				libri.add(l);
 			}
 		}
@@ -118,6 +139,7 @@ public class Model {
 		}
 		float diffB = budget - totale(best);
 		float diffP = budget - totale(parziale);
+
 		if (diffB > diffP) {
 			best = new ArrayList<>(parziale);
 		}
@@ -160,7 +182,12 @@ public class Model {
 	}
 
 	public Libro bestSeller(List<Libro> toCalc) {
-		Libro bestSeller = toCalc.get(0);
+		Libro bestSeller = null;
+		if (toCalc.size() > 0) {
+			bestSeller = toCalc.get(0);
+		} else {
+			return null;
+		}
 		for (Libro l : toCalc) {
 			if (l.getRank() < bestSeller.getRank()) {
 				bestSeller = l;
