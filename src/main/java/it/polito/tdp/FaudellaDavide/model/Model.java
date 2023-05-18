@@ -129,6 +129,12 @@ public class Model {
 			String genere) {
 		libriParametri = dao.getBooksParametri(rating, numero, annoI, annoF, copertina, genere);
 		best = new ArrayList<>();
+		
+		if (budget > totale(libriParametri)) {
+			best = new ArrayList<>(libriParametri);
+			return best;
+		}
+		
 		cerca(parziale, budget);
 		return best;
 	}
@@ -137,6 +143,7 @@ public class Model {
 		if (totale(best) == budget) {
 			return;
 		}
+		
 		float diffB = budget - totale(best);
 		float diffP = budget - totale(parziale);
 

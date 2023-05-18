@@ -328,7 +328,7 @@ public class FXMLController {
 			txtErroriGen.setText("Non sono stati trovati libri con questi\nparametri");
 		} else {
 			txtNumLib.setText("Numero Libri: " + lista.size());
-			txtCostoTot.setText("Costo totale: " + model.totale(lista));
+			txtCostoTot.setText("Costo totale: " + String.format("%.2f", model.totale(lista)));
 			txtBestSeller.setText("Best Seller: \n" + model.bestSeller(lista));
 			txtNumLib.setVisible(true);
 			txtCostoTot.setVisible(true);
