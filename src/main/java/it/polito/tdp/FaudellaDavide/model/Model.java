@@ -130,7 +130,7 @@ public class Model {
 		libriParametri = dao.getBooksParametri(rating, numero, annoI, annoF, copertina, genere);
 		best = new ArrayList<>();
 		
-		if (budget > totale(libriParametri)) {
+		if (budget > totale(libriParametri)) { 
 			best = new ArrayList<>(libriParametri); 
 			return best;
 		}
