@@ -131,7 +131,7 @@ public class Model {
 		best = new ArrayList<>();
 		
 		if (budget > totale(libriParametri)) {
-			best = new ArrayList<>(libriParametri);
+			best = new ArrayList<>(libriParametri); 
 			return best;
 		}
 		
