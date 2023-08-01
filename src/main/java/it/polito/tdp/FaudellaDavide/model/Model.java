@@ -125,30 +125,38 @@ public class Model {
 		return true;
 	}
 
+	int flag = 0;
+
 	public List<Libro> doRicorsione(float budget, float rating, int numero, int annoI, int annoF, String copertina,
 			String genere) {
+		flag = 0;
 		libriParametri = dao.getBooksParametri(rating, numero, annoI, annoF, copertina, genere);
 		best = new ArrayList<>();
-		
-		if (budget > totale(libriParametri)) { 
-			best = new ArrayList<>(libriParametri); 
+
+		if (budget > totale(libriParametri)) {
+			best = new ArrayList<>(libriParametri);
 			return best;
 		}
-		
+
 		cerca(parziale, budget);
 		return best;
 	}
 
 	private void cerca(List<Libro> parziale, float budget) {
 		if (totale(best) == budget) {
-			return;
+			flag = 1;
 		}
-		
+
 		float diffB = budget - totale(best);
 		float diffP = budget - totale(parziale);
 
-		if (diffB > diffP) {
+		if (diffB > diffP) { // parziale si avvicina di più al budget da spendere
 			best = new ArrayList<>(parziale);
+		}
+		if (diffB == diffP) { // se è uguale prendo quello con più stelle medie
+			if (stelleMaggiori(best, parziale) == true) {
+				best = new ArrayList<>(parziale);
+			}
 		}
 		for (Libro l : libriParametri) {
 			if (isValid(parziale, l, budget)) {
@@ -163,6 +171,14 @@ public class Model {
 		float totale = li.getPrezzo();
 		for (Libro l : parziale) {
 			totale += l.getPrezzo();
+		}
+		if (flag == 1) { // se siamo gia al budget desiderato e cerchiamo altre combinazioni magari con
+							// più stelle
+			// se ne troviamo alcune che non sono esattamente uguali al budget le scartiamo
+			// già qui
+			if (totale != budget) {
+				return false;
+			}
 		}
 		if (totale <= budget && !parziale.contains(li)) {
 			for (Libro l : libriParametri) {
@@ -201,5 +217,25 @@ public class Model {
 			}
 		}
 		return bestSeller;
+	}
+
+	private boolean stelleMaggiori(List<Libro> best2, List<Libro> parziale2) {
+		float mediaStelleBest = 0;
+		float mediaStelleParz = 0;
+		for (Libro l : best2) {
+			mediaStelleBest += l.getRating();
+		}
+		for (Libro l : parziale2) {
+			mediaStelleParz += l.getRating();
+		}
+		mediaStelleBest /= best2.size();
+		mediaStelleParz /= parziale2.size();
+
+		if (mediaStelleParz > mediaStelleBest) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 }
