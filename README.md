@@ -11,6 +11,6 @@ Istruzioni per l'installazione e l'utilizzo del software:
 
 4- Modificare la password di accesso al database all'interno della classe DBConnect, inserendo la propria;
 
-5- Visionare la guida all'utilizzo (link video);
+5- Visionare la guida all'utilizzo (https://youtu.be/7_VzCdF3rH4);
 
 6- Eseguire la classe "Main" per avviare l'applicazione;
